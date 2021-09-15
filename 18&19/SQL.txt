@@ -1,0 +1,106 @@
+1. Konsep:
+a. Sebutkan entities (sing.: entity) yang terdapat pada ERD terlampir!
+	1.User
+	2.Song
+	3.Album
+	4.Genre
+	5.Artist
+b. Terdapat 6 relasi dalam ERD terlampir, sebutkan jenis relasi dari masing-masing relasi!
+	1.User choose Song		: Many to Many
+	2.Song corresponds to Genre 	: Many to One
+	3.Album contains Song 		: One to Many
+	4.Artist prepare Song 		: One to Many
+	5.Album created by Artist	: One to Many
+	6.Album consist of Genre 	: Many to One
+   
+
+c. Dari 7 Foreign Key (FK), ada 1 FK yang tidak diperlukan. Pilih FK apa dan dari tabel mana dan sertakan alasanmu!
+	
+	- FK:Song dari tabel user karena fk song tidak punya relasi
+
+2. Tuliskan query SQL untuk mengimplementasikan desain atau ERD (Entity Relationship Diagram) terlampir!
+Perhatikan atribut-atribut, tipe data, dan relasi setiap tabel!
+Atribut yang tidak perlu:
+User: FirstName, LastName, Email, Password, SignUpDate, ProfilePic.
+Song: Duration, Path, AlbumOrder, Plays.
+Album: ArtworkPath.
+Ingat, many-to-many perlu tabel penghubung! (Jenis relasi berdasarkan garis penghubung bisa dilihat disini https://d2slcw3kip6qmk.cloudfront.net/marketing/pages/chart/erd-symbols/ERD-Notation.PNG)
+
+Tulis query di bawah sini:
+
+CREATE TABLE users(
+  ID SERIAL NOT NULL,
+  song int NOT NULL,
+  username VARCHAR (25),
+  PRIMARY KEY (ID)    
+);
+
+CREATE TABLE song(
+  ID SERIAL NOT NULL, 
+  genre int NOT NULL, 
+  artist int NOT NULL, 
+  album int NOT NULL,
+  title VARCHAR(250 , 
+  PRIMARY KEY (ID)
+);
+
+CREATE TABLE album(
+  ID SERIAL NOT NULL,
+  genre int NOT NULL,
+  song int NOT NULL,
+  artist int NOT NULL,
+  title VARCHAR(250),
+  PRIMARY KEY (ID)
+);
+
+CREATE TABLE artist(
+  ID SERIAL NOT NULL ,
+  name VARCHAR(50),
+  PRIMARY KEY (ID) 
+);
+
+CREATE TABLE genre(
+  ID SERIAL NOT NULL,
+  name VARCHAR(50),
+  PRIMARY KEY (ID) 
+);
+
+CREATE TABLE SongUser (
+  ID SERIAL NOT NULL,
+  usersId int NOT NULL,
+  songId int NOT NULL,
+  PRIMARY KEY (ID)
+);
+
+3. Melalui pgAdmin, sertakan screenshot seluruh tabel yang anda buat!
+Silahkan di-upload ke cloud (imgur, google drive, dsb) dan pastikan link tidak private!
+
+Tulis url screenshot di bawah sini:
+https://drive.google.com/drive/folders/1i3lDxzpFObmRNr8hQL42Ob0miXcJwoHQ
+
+4. Tuliskan query dari persoalan berikut:
+a. Saya ingin tahu seluruh daftar user.
+	SELECT username
+	FROM users
+b. Saya ingin tahu seluruh daftar lagu beserta genrenya.
+	SELECT song.title , genre.name
+	from genre
+	INNER JOIN song ON song.genre = genre.id
+c. Saya ingin tahu daftar seluruh album dari "Noah".
+	SELECT artist.name , album.title
+	FROM artist
+	INNER JOIN album ON artist.id = album.artist
+	WHERE name='noah'
+d. Saya ingin tahu daftar seluruh lagu bergenre "Dangdut".
+	SELECT song.title,genre.name
+	FROM genre
+	INNER JOIN song ON genre.id = song.genre
+	WHERE genre.name = 'Dangdut'
+e. Saya ingin tahu daftar seluruh genre yang dipilih oleh user dengan username fadhlanmakarim.
+SELECT users.username,genre.name
+	FROM users
+	INNER JOIN usersong ON users.id = usersong.usersid
+	INNER JOIN song ON usersong.songid = song.id
+	INNER JOIN genre ON song.genre = genre.id
+	WHERE users.username = 'fadhlanmakarim'
+
